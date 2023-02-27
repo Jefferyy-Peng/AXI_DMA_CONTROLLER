@@ -1,0 +1,11 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sources_1/new/axi_dma_controller.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module axi_dma_controller
+WARNING: [VRFC 10-8374] loop variable declaration is not allowed in this mode of Verilog [F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sources_1/new/axi_dma_controller.v:206]
+INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sources_1/new/axi_slave.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module axi_slave
+WARNING: [VRFC 10-8374] loop variable declaration is not allowed in this mode of Verilog [F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sources_1/new/axi_slave.v:139]
+WARNING: [VRFC 10-8374] loop variable declaration is not allowed in this mode of Verilog [F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sources_1/new/axi_slave.v:220]
+INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sources_1/new/top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module top
+INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sim_1/new/axi_dma_ctl_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module test

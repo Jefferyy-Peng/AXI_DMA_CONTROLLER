@@ -1,0 +1,9 @@
+0.7
+2020.2
+Oct 14 2022
+05:20:55
+F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.sim/sim_1/behav/xsim/glbl.v,1665704903,verilog,,,,glbl,,,,,,,,
+F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sim_1/new/axi_dma_ctl_tb.v,1677484702,verilog,,,,test,,,,,,,,
+F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sources_1/new/axi_dma_controller.v,1677484665,verilog,,F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sources_1/new/axi_slave.v,,axi_dma_controller,,,,,,,,
+F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sources_1/new/axi_slave.v,1677484328,verilog,,F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sources_1/new/top.v,,axi_slave,,,,,,,,
+F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sources_1/new/top.v,1677477719,verilog,,F:/Xilinx/Projects/project_AXI_DMA/project_AXI_DMA.srcs/sim_1/new/axi_dma_ctl_tb.v,,top,,,,,,,,
