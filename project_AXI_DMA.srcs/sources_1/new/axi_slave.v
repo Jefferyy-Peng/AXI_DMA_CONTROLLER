@@ -64,15 +64,8 @@ module axi_slave#
         input   wire                            S_AXI_BREADY
 );
 
-/**********************参数***************************/
-
-/**********************状�?�机*************************/
-
-/**********************寄存�?*************************/
-
 
 reg [ADDR_WD-1 : 0]  r_awaddr                                ;
-reg [ADDR_WD-1:0]               r_awlen                                 ;
 reg                             r_awready                               ;
 reg                             r_wready                                ;
 reg                             r_arready                               ;
@@ -135,9 +128,10 @@ assign               S_AXI_BRESP     = 'd0                               ;
 assign               S_AXI_BVALID    = r_bvalid                          ;
 assign TRANS_PER_DATA   = DATA_WD_BYTE/(2**(S_AXI_AWSIZE))   ;
 
+integer k;
 always@ * begin
-    for(integer j = 0; j < 4; j = j + 1) begin
-        r_w_strobe[j*8 +:8] = {8{S_AXI_WSTRB[j]}};
+    for(k = 0; k < 4; k = k + 1) begin
+        r_w_strobe[k*8 +:8] = {8{S_AXI_WSTRB[k]}};
     end
 end
 
@@ -164,13 +158,6 @@ always@(posedge clk) begin
         r_awaddr <= r_awaddr;
 end
 
-always@(posedge clk) begin
-    if(w_aw_active)
-        r_awlen <= S_AXI_AWLEN;
-    // else if()
-    else 
-        r_awlen <= r_awlen;
-end
 /*--------------------------write-------------------------------*/
 
 always@(posedge clk) begin
@@ -204,20 +191,9 @@ always@(posedge clk) begin
         r_w_active_1 <= w_w_active;
 end
 
-// always@(posedge clk) begin
-//     if(rst || w_trans_num == TRANS_PER_DATA) begin
-//         w_trans_num <= 0;
-//         if((S_AXI_AWBURST == 2'b0)
-//             mem[w_awaddr_word] <= 0;
-//     end
-//     else if(S_AXI_WREADY && S_AXI_WVALID)
-//         w_trans_num <= w_trans_num + 1;
-//     else
-//         w_trans_num <= w_trans_num;
-// end
-
+integer j;
 always@ * begin
-    for(integer j = 0; j < STRB_WD; j = j + 1) begin
+    for(j = 0; j < STRB_WD; j = j + 1) begin
         WSTRB_word[j*8 +:8] = {8{S_AXI_WSTRB[j]}};
     end
 end
@@ -254,67 +230,6 @@ always@(posedge clk) begin
     end
     endcase
 end
-
-// //ram核心�?
-// always@(posedge clk) begin
-//     if(!r_ram_rh_wl) 
-//         r_ram[r_ram_addr_1b] <= r_ram_en ? r_ram_write_data : r_ram[r_ram_addr];
-//     else 
-//         r_ram[r_ram_addr_1b] <= r_ram[r_ram_addr_1b];
-//         end
-
-// //ram核心�?
-// always@(posedge clk) begin
-//     if(r_ram_rh_wl)
-//         r_ram_read_data <= r_ram[r_ram_addr_1b] ;  
-//     else 
-//         r_ram_read_data <= r_ram_read_data   ;
-//         end
-
-// //ram地址
-// always@(posedge clk) begin
-//     if(w_rst || S_AXI_WLAST || S_AXI_RLAST)
-//         r_ram_addr <= 'd0;
-//     else if(w_aw_active)
-//         r_ram_addr <= S_AXI_AWADDR[7:0];
-//     else if(w_ar_active)
-//         r_ram_addr <= S_AXI_ARADDR[7:0];
-//     else if(w_w_active || (r_rvalid & S_AXI_RREADY))
-//         r_ram_addr <= r_ram_addr + 1;
-//     else 
-//         r_ram_addr <= r_ram_addr;
-//         end
-
-// //ram地址打一�?
-// always@(posedge clk) begin
-//     r_ram_addr_1b <= r_ram_addr;
-//     end
-
-//ram写端�?
-// always@(posedge clk) begin
-//     if(w_w_active)
-//         r_ram_write_data <= S_AXI_WDATA         ;
-//     else    
-//         r_ram_write_data <= r_ram_write_data    ;
-//         end
-
-// //ram读写控制
-// always@(posedge clk) begin
-//     if(w_ar_active)
-//         r_ram_rh_wl <= 'd1;
-//     else if(w_aw_active)
-//         r_ram_rh_wl <= 'd0;
-//     else 
-//         r_ram_rh_wl <= r_ram_rh_wl;
-//         end
-
-// //ram写使�?
-// always@(posedge clk) begin
-//     if(w_w_active)
-//         r_ram_en <= 'd1;
-//     else
-//         r_ram_en <= 'd0;
-//         end
 
 
 /**********************read address***************************/

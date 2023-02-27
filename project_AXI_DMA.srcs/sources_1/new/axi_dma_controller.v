@@ -75,11 +75,8 @@
     reg   [ADDR_WD-1 : 0]     r_cmd_src_addr            ;
     reg   [ADDR_WD-1 : 0]     r_cmd_dst_addr            ;
     reg   [1:0]               r_cmd_burst               ;
-    reg   [ADDR_WD-1 : 0]     r_cmd_len                 ;
     reg   [2:0]               r_cmd_size                ;
     reg                       r_cmd_ready               ;
-    reg [8:0] r_read_ptr;
-    reg [DATA_WD-1:0] r_data_strobed;
 
     reg                       r_m_axi_rlast             ;
     reg                       r_m_axi_rready            ;
@@ -141,7 +138,6 @@
             r_cmd_src_addr <= 0; 
             r_cmd_dst_addr <= 0;
             r_cmd_burst <= 0;
-            r_cmd_len <= 0;
             r_cmd_size <= 0;
             r_m_axi_awlen <= 1;
             r_m_axi_arlen <= 1;
@@ -151,7 +147,6 @@
             r_cmd_src_addr <= cmd_src_addr;
             r_cmd_dst_addr <= cmd_dst_addr;
             r_cmd_burst <= cmd_burst;
-            r_cmd_len <= cmd_len;
             r_cmd_size <= cmd_size;
             r_m_axi_awlen <= cmd_len/(DATA_WD_BYTE);
             r_m_axi_arlen <= cmd_len/(DATA_WD_BYTE);
@@ -161,7 +156,6 @@
             r_cmd_src_addr <= r_cmd_src_addr;
             r_cmd_dst_addr <= r_cmd_dst_addr;
             r_cmd_burst <= r_cmd_burst;
-            r_cmd_len <= r_cmd_len;
             r_cmd_size <= r_cmd_size;
             r_read_start <= 0;
             r_m_axi_awlen <= r_m_axi_awlen;
@@ -201,9 +195,9 @@
     end
     
 /*---------------------  read -------------------------------*/
-
+integer j;
 always@ * begin
-    for(integer j = 0; j < STRB_WD; j = j + 1) begin
+    for(j = 0; j < STRB_WD; j = j + 1) begin
         R_strobe_word[j*8 +:8] = {8{R_strobe[j]}};
     end
 end
@@ -225,11 +219,6 @@ end
     //     else
     //         r_trans_num <= r_trans_num;
     // end
-
-    always@(posedge clk) begin
-        r_read_ptr <= r_read_cnt/TRANS_PER_DATA;
-        r_data_strobed <= M_AXI_RDATA & R_strobe_word;
-    end
 
     integer i;
     always@(posedge clk) begin
@@ -302,84 +291,6 @@ end
         else 
             w_trans_num <= w_trans_num;
     end
-
-    //  always@(posedge clk) begin
-    //     if(rst) 
-    //         r_m_axi_wstrb <= 0;
-    //     else if(M_AXI_WREADY && M_AXI_WVALID)begin
-    //             case(DATA_WD_BYTE) 
-    //             2: begin
-    //                 case(TRANS_PER_DATA)
-    //                     2: begin
-    //                         case(trans_num)
-    //                         0: r_m_axi_wstrb <= {STRB_WD/2{1'b0},STRB_WD/2{1'b1}};
-    //                         default: r_m_axi_wstrb <= r_m_axi_wstrb << STRB_WD/2;
-    //                         endcase
-    //                     end
-    //                     default: r_m_axi_wstrb <= {STRB_WD{1'b1}};
-    //                 endcase
-    //             end
-    //             4: begin
-    //                 case(TRANS_PER_DATA)
-    //                     2: begin
-    //                         case(trans_num)
-    //                         0: r_m_axi_wstrb <= {STRB_WD/2{1'b0},STRB_WD/2{1'b1}};
-    //                         default: r_m_axi_wstrb <= r_m_axi_wstrb << STRB_WD/2;
-    //                         endcase
-    //                     end
-    //                     4: begin
-    //                         case(trans_num)
-    //                         0: r_m_axi_wstrb <= {STRB_WD/4{1'b0},STRB_WD/4{1'b0},STRB_WD/4{1'b0},STRB_WD/4{1'b1}};
-    //                         default: r_m_axi_wstrb <= r_m_axi_wstrb << STRB_WD/4;
-    //                         endcase
-    //                     end
-    //                     default: r_m_axi_wstrb <= {STRB_WD{1'b1}};
-    //                 endcase
-    //             end
-    //             8: begin
-    //                 case(TRANS_PER_DATA)
-    //                     2: begin
-    //                         case(trans_num)
-    //                         0: r_m_axi_wstrb <= {STRB_WD/2{1'b0},STRB_WD/2{1'b1}};
-    //                         default: r_m_axi_wstrb <= r_m_axi_wstrb << STRB_WD/2;
-    //                         endcase
-    //                     end
-    //                     4: begin
-    //                         case(trans_num)
-    //                         0: r_m_axi_wstrb <= {STRB_WD/4{1'b0},STRB_WD/4{1'b0},STRB_WD/4{1'b0},STRB_WD/4{1'b1}};
-    //                         1: r_m_axi_wstrb <= {STRB_WD/4{1'b0},STRB_WD/4{1'b0},STRB_WD/4{1'b1},STRB_WD/4{1'b0}};
-    //                         2: r_m_axi_wstrb <= {STRB_WD/4{1'b0},STRB_WD/4{1'b1},STRB_WD/4{1'b0},STRB_WD/4{1'b0}};
-    //                         3: r_m_axi_wstrb <= {STRB_WD/4{1'b1},STRB_WD/4{1'b0},STRB_WD/4{1'b0},STRB_WD/4{1'b0}};
-    //                         endcase
-    //                     end
-    //                     8: begin
-    //                         case(trans_num)
-    //                         0: r_m_axi_wstrb <= {STRB_WD/8{1'b0},STRB_WD/8{1'b0},STRB_WD/8{1'b0},STRB_WD/8{1'b1}};
-    //                         1: r_m_axi_wstrb <= {STRB_WD/8{1'b0},STRB_WD/8{1'b0},STRB_WD/8{1'b1},STRB_WD/8{1'b0}};
-    //                         2: r_m_axi_wstrb <= {STRB_WD/8{1'b0},STRB_WD/8{1'b1},STRB_WD/8{1'b0},STRB_WD/8{1'b0}};
-    //                         3: r_m_axi_wstrb <= {STRB_WD/8{1'b1},STRB_WD/8{1'b0},STRB_WD/8{1'b0},STRB_WD/8{1'b0}};
-    //                         4: r_m_axi_wstrb <= {STRB_WD/8{1'b1},STRB_WD/8{1'b0},STRB_WD/8{1'b0},STRB_WD/8{1'b0}};
-    //                         5: r_m_axi_wstrb <= {STRB_WD/8{1'b1},STRB_WD/8{1'b0},STRB_WD/8{1'b0},STRB_WD/8{1'b0}};
-    //                         6: r_m_axi_wstrb <= {STRB_WD/8{1'b1},STRB_WD/8{1'b0},STRB_WD/8{1'b0},STRB_WD/8{1'b0}};
-    //                         7: r_m_axi_wstrb <= {STRB_WD/8{1'b1},STRB_WD/8{1'b0},STRB_WD/8{1'b0},STRB_WD/8{1'b0}};
-    //                         endcase
-    //                     end
-    //                 endcase
-    //             end
-    //             16: begin
-    //                 case(TRANS_PER_DATA)
-    //                     2: r_m_axi_wstrb <= {STRB_WD/2{1'b1},STRB_WD/2{1'b0}}
-    //                     4: r_m_axi_wstrb <= {STRB_WD/2{1'b1},STRB_WD/2{1'b0}}
-    //                     8: r_m_axi_wstrb <= {STRB_WD/2{1'b1},STRB_WD/2{1'b0}}
-    //                     16: r_m_axi_wstrb <= {STRB_WD/2{1'b1},STRB_WD/2{1'b0}}
-    //                 endcase
-    //             end
-    //             default: r_m_axi_wstrb <= {STRB_WD{1'b1}};
-    //         endcase
-    //     end
-    //     else
-    //         r_m_axi_wstrb <= r_m_axi_wstrb;
-    // end
 
     always@(posedge clk) begin
         r_m_axi_wstrb_1 <= r_m_axi_wstrb;
