@@ -18,7 +18,7 @@
 ### Master
   * Parameters: *ADDR_WD*, *DATA_WD*, *localparam STRB_WD = DATA_WD / 8*
 
-| Signal        | meaning           | width  |
+| Signal        | Meaning           | Width  |
 | ------------- |:-------------:| -----:|
 | clk      | Global clock | 1 |
 | rst      | Global reset      |   1 |
@@ -56,10 +56,10 @@
 | M_AXI_BREADY | Response ready      |    1 |
 
 
-### 从机
- * 参数: *ADDR_WD*, *DATA_WD*, *localparam STRB_WD = DATA_WD / 8*
+### Slave
+ * Parameters: *ADDR_WD*, *DATA_WD*, *localparam STRB_WD = DATA_WD / 8*
 
-| 信号        | 含义           | 位宽  |
+| Singal        | Meaning           | Width  |
 | ------------- |:-------------:| -----:|
 | clk      | Global clock | 1 |
 | rst      | Global reset      |   1 |
