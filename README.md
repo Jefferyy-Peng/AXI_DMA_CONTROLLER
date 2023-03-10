@@ -1,13 +1,12 @@
 # AXI_DMA_CONTROLLER
 
-## 简介
-* 基于AXI接口实现的DMA controller，包含主机，从机两个模块。
-* 目前支持burst传输模式中的FIXED和INCR mode
-* 可run time调整AXI总线传输长度以及单次传输最大位宽，支持AXI Narrow传输机制
-* 可参数化调整总线以及数据位宽，最大数据位宽128bit
-* 暂不支持地址非对齐传输以及4K地址边界处理
+## Introduction
+* This is a DMA controller implemented based on AXI interface. It is consisted by a master and a slave module
+* Now only support FIXED and INCR burst mode
+* Bus width and max data width in each beat is runtime configurable. It also supports AXI Narrow transfers
+* Unalligned Transmit and 4K address boundary handling is not supported yet
 
-## 文件结构
+## File structure
 * src
   * axi_dma_controller.v
   * axi_slave.v
@@ -15,46 +14,46 @@
 * sim
   * axi_dma_ctl_tb.v
 
-## 模块细节
-### 主机
-  * 参数： *ADDR_WD*, *DATA_WD*, *localparam STRB_WD = DATA_WD / 8*
+## Details
+### Master
+  * Parameters: *ADDR_WD*, *DATA_WD*, *localparam STRB_WD = DATA_WD / 8*
 
-| 信号        | 含义           | 位宽  |
+| Signal        | meaning           | width  |
 | ------------- |:-------------:| -----:|
-| clk      | 全局时钟 | 1 |
-| rst      | 全局复位      |   1 |
-| cmd_valid | DMA指令有效      |    1 |
-| cmd_src_addr      | DMA指令源地址 | ADDR_WD |
-| cmd_dst_addr      | DMA指令目的地址      |   ADDR_WD |
-| cmd_burst | DMA指令突发传输模式    |    2 |
-| cmd_len      | 突发传输 | ADDR_WD |
-| cmd_size      | 单次传输最大位宽      |   3 |
-| cmd_ready |  DMA指令就绪     |    1 |
-| M_AXI_ARVALID      | 读地址有效 | 1 |
-| M_AXI_ARADDR      | 读地址      |   ADDR_WD |
-| M_AXI_ARLEN | burst长度      |    ADDR_WD |
-| M_AXI_ARSIZE      | burst单次传输位宽 | 3 |
-| M_AXI_ARBURST      | burst传输模式      |   2 |
-| M_AXI_ARREADY | 读地址就绪      |    1 |
-| M_AXI_RVALID      | 读有效 | 1 |
-| M_AXI_RDATA      | 读数据      |   DATA_WD |
-| M_AXI_RRESP | 读相应(默认OKAY)      |    2 |
-| M_AXI_RLAST      | 读结束标志 | 1 |
-| R_strobe      | 读结绳，实现Narrow机制      |   STRB_WD |
-| M_AXI_RREADY | 读就绪      |    1 |
-| M_AXI_AWVALID      | 写地址有效 | 1 |
-| M_AXI_AWADDR      | 写地址      |   ADDR_WD |
-| M_AXI_AWSIZE | burst长度      |    3 |
-| M_AXI_AWBURST | burst模式      |    2 |
-| M_AXI_AWREADY | 写地址就绪      |    1 |
-| M_AXI_WVALID | 写有效      |    1 |
-| M_AXI_WDATA | 写数据      |    DATA_WD |
-| M_AXI_WSTRB | 写结绳      |    STRB_WD |
-| M_AXI_WLAST | 写结束标志      |    1 |
-| M_AXI_WREADY | 写就绪      |    1 |
-| M_AXI_BVALID | 相应有效      |    1 |
-| M_AXI_BRESP | 相应信号      |    2 |
-| M_AXI_BREADY | 相应就绪      |    1 |
+| clk      | Global clock | 1 |
+| rst      | Global reset      |   1 |
+| cmd_valid | DMA command valid      |    1 |
+| cmd_src_addr      | DMA source address | ADDR_WD |
+| cmd_dst_addr      | DMA destination address      |   ADDR_WD |
+| cmd_burst | DMA burst mode    |    2 |
+| cmd_len      | burst length | ADDR_WD |
+| cmd_size      | Max Beat data width      |   3 |
+| cmd_ready |  DMA command ready     |    1 |
+| M_AXI_ARVALID      | Address read valid | 1 |
+| M_AXI_ARADDR      | Address read      |   ADDR_WD |
+| M_AXI_ARLEN | burst length      |    ADDR_WD |
+| M_AXI_ARSIZE      | Max Beat data width  | 3 |
+| M_AXI_ARBURST      | burst mode      |   2 |
+| M_AXI_ARREADY | Address read ready      |    1 |
+| M_AXI_RVALID      | Read valid | 1 |
+| M_AXI_RDATA      | Read data      |   DATA_WD |
+| M_AXI_RRESP | read response(Default OKAY)      |    2 |
+| M_AXI_RLAST      | Read terminate signal | 1 |
+| R_strobe      | Read Strobe, implementing Narrow Transmit      |   STRB_WD |
+| M_AXI_RREADY | Read ready      |    1 |
+| M_AXI_AWVALID      | Write address valid | 1 |
+| M_AXI_AWADDR      | write address      |   ADDR_WD |
+| M_AXI_AWSIZE | burst length      |    3 |
+| M_AXI_AWBURST | burst mode     |    2 |
+| M_AXI_AWREADY | Write address ready      |    1 |
+| M_AXI_WVALID | Write valid      |    1 |
+| M_AXI_WDATA | Write data      |    DATA_WD |
+| M_AXI_WSTRB | Write strobe      |    STRB_WD |
+| M_AXI_WLAST | Write terminate signal      |    1 |
+| M_AXI_WREADY | Write ready      |    1 |
+| M_AXI_BVALID | Response valid      |    1 |
+| M_AXI_BRESP | Response signal      |    2 |
+| M_AXI_BREADY | Response ready      |    1 |
 
 
 ### 从机
@@ -62,45 +61,45 @@
 
 | 信号        | 含义           | 位宽  |
 | ------------- |:-------------:| -----:|
-| clk      | 全局时钟 | 1 |
-| rst      | 全局复位      |   1 |
-| S_AXI_ARVALID      | 读地址有效 | 1 |
-| S_AXI_ARADDR      | 读地址      |   ADDR_WD |
-| S_AXI_ARLEN | burst长度      |    ADDR_WD |
-| S_AXI_ARSIZE      | burst单次传输位宽 | 3 |
-| S_AXI_ARBURST      | burst传输模式      |   2 |
-| S_AXI_ARREADY | 读地址就绪      |    1 |
-| S_AXI_RVALID      | 读有效 | 1 |
-| S_AXI_RDATA      | 读数据      |   DATA_WD |
-| S_AXI_RRESP | 读相应(默认OKAY)      |    2 |
-| S_AXI_RLAST      | 读结束标志 | 1 |
-| R_strobe      | 读结绳，实现Narrow机制      |   STRB_WD |
-| S_AXI_RREADY | 读就绪      |    1 |
-| S_AXI_AWVALID      | 写地址有效 | 1 |
-| S_AXI_AWADDR      | 写地址      |   ADDR_WD |
-| S_AXI_AWSIZE | burst长度      |    3 |
-| S_AXI_AWBURST | burst模式      |    2 |
-| S_AXI_AWREADY | 写地址就绪      |    1 |
-| S_AXI_WVALID | 写有效      |    1 |
-| S_AXI_WDATA | 写数据      |    DATA_WD |
-| S_AXI_WSTRB | 写结绳      |    STRB_WD |
-| S_AXI_WLAST | 写结束标志      |    1 |
-| S_AXI_WREADY | 写就绪      |    1 |
-| S_AXI_BVALID | 相应有效      |    1 |
-| S_AXI_BRESP | 相应信号      |    2 |
-| S_AXI_BREADY | 相应就绪      |    1 |
+| clk      | Global clock | 1 |
+| rst      | Global reset      |   1 |
+| S_AXI_ARVALID      | Read address valid | 1 |
+| S_AXI_ARADDR      | Read address      |   ADDR_WD |
+| S_AXI_ARLEN | burst length      |    ADDR_WD |
+| S_AXI_ARSIZE      | Max Beat data width | 3 |
+| S_AXI_ARBURST      | burst mode      |   2 |
+| S_AXI_ARREADY | Read address ready      |    1 |
+| S_AXI_RVALID      | Read valid | 1 |
+| S_AXI_RDATA      | Read data      |   DATA_WD |
+| S_AXI_RRESP | read response(Default OKAY)      |    2 |
+| S_AXI_RLAST      | Read terminate signal | 1 |
+| R_strobe      | Read Strobe, implementing Narrow Transmit      |   STRB_WD |
+| S_AXI_RREADY | Read ready      |    1 |
+| S_AXI_AWVALID      | Write address valid | 1 |
+| S_AXI_AWADDR      | Write address      |   ADDR_WD |
+| S_AXI_AWSIZE | burst length      |    3 |
+| S_AXI_AWBURST | burst mode      |    2 |
+| S_AXI_AWREADY | Write address ready      |    1 |
+| S_AXI_WVALID | Write valid      |    1 |
+| S_AXI_WDATA | Write data      |    DATA_WD |
+| S_AXI_WSTRB | Write strobe       |    STRB_WD |
+| S_AXI_WLAST | Write terminate signal      |    1 |
+| S_AXI_WREADY | Write ready      |    1 |
+| S_AXI_BVALID | Response valid      |    1 |
+| S_AXI_BRESP | Response signal      |    2 |
+| S_AXI_BREADY | Response ready      |    1 |
 
-## 读写仿真
+## Simulation
 
-* 32位总线读仿真
+* 32 bit bus read simulation
 ![image](https://user-images.githubusercontent.com/123399300/221536905-4605aceb-5c4d-49f0-899d-3c886ea214c3.png)
 
-* 32位总线写仿真
+* 32 bit bus write simulation
 ![image](https://user-images.githubusercontent.com/123399300/221537203-4a486177-77dd-420b-8344-ed479438b988.png)
 
-* 64位总线读仿真
+* 64 bit bus read simulation
 ![image](https://user-images.githubusercontent.com/123399300/221537719-4427493f-1d6e-432f-9620-128699425ddd.png)
 
-* 64位总线写仿真
+* 64 bit bus write simulation
 ![image](https://user-images.githubusercontent.com/123399300/221537885-a72f6fdb-09f0-4d9a-a86c-2a3f20a3b99a.png)
 
